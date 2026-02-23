@@ -1,0 +1,45 @@
+services:
+  mongodb:
+    image: mongo:7
+    container_name: test-elai-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: test_elai
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: test-elai-backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./uploads:/app/uploads
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/test_elai
+      - JWT_SECRET=change-me-in-production-at-least-32-chars
+      - UPLOAD_DIR=/app/uploads
+      - PORT=3000
+      - CORS_ORIGIN=http://localhost:4200
+      - CSV_PREVIEW_ROWS=100
+      - NODE_ENV=development
+      - HOST=0.0.0.0
+      - MAX_UPLOAD_SIZE_MB=10000
+    depends_on:
+      - mongodb
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: test-elai-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:

@@ -1,0 +1,17 @@
+@import 'tailwindcss';
+@plugin "daisyui";
+@import '@ng-select/ng-select/themes/default.theme.css';
+
+body {
+  @apply bg-base-200 min-h-screen relative;
+}
+
+* {
+  transition: background-color 0.4s ease;
+}
+
+.input:focus,
+.input:focus-within {
+  outline: none;
+  border-color: var(--color-primary);
+}
